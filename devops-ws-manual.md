@@ -157,7 +157,7 @@ http://pubs.vmware.com/workstation-12/index.jsp#com.vmware.ws.using.doc/GUID-1F5
 
 http://pubs.vmware.com/workstation-12/index.jsp#com.vmware.ws.using.doc/GUID-42F4754B-7547-4A4D-AC08-353D321A051B.html opciones de línea de mandatos para la instalación
 
-usamos el mandato:
+instalamos mediante el mandato:
 
 ```bash
 sudo bash VMware-Workstation-Full-12.5.5-5234757.x86_64.bundle \
@@ -166,6 +166,48 @@ sudo bash VMware-Workstation-Full-12.5.5-5234757.x86_64.bundle \
               --set-setting vmware-workstation-app softwareUpdateEnabled no \
               --set-setting vmware-player-app softwareUpdateEnabled no 
 ```
+
+Para ver la lista de, hacemos:
+sudo bash VMware-Workstation-Full-12.5.5-5234757.x86_64.bundle -t
+Extracting VMware Installer...done.
+Component Name                 Component Long Name                               Component Version   
+============================== ================================================= ====================
+vmware-installer               VMware Installer                                  2.1.0.5087745       
+vmware-player-setup            VMware Player Setup                               12.5.5.5234757      
+vmware-vmx                     VMware VMX                                        12.5.5.5234757      
+vmware-vix-core                VMware VIX Core Library                           1.15.7.5234757      
+vmware-network-editor          VMware Network Editor                             12.5.5.5234757      
+vmware-network-editor-ui       VMware Network Editor User Interface              12.5.5.5234757      
+vmware-tools-netware           VMware Tools for NetWare                          10.1.6.5234757      
+vmware-tools-linuxPreGlibc25   VMware Tools for legacy Linux                     10.1.6.5234757      
+vmware-tools-winPreVista       VMware Tools for Windows 2000, XP and Server 2003 10.1.6.5234757      
+vmware-tools-winPre2k          VMware Tools for Windows 95, 95, Me and NT        10.1.6.5234757      
+vmware-tools-freebsd           VMware Tools for FreeBSD                          10.1.6.5234757      
+vmware-tools-windows           VMware Tools for Windows Vista or later           10.1.6.5234757      
+vmware-tools-solaris           VMware Tools for Solaris                          10.1.6.5234757      
+vmware-tools-linux             VMware Tools for Linux                            10.1.6.5234757      
+vmware-usbarbitrator           VMware USB Arbitrator                             15.2.0.5234757      
+vmware-player-app              VMware Player Application                         12.5.5.5234757      
+vmware-workstation-server      VMware Workstation Server                         12.5.5.5234757      
+vmware-ovftool                 VMware OVF Tool component for Linux               4.1.0.3634792       
+vmware-vprobe                  VMware VProbes component for Linux                12.5.5.5234757      
+vmware-vix-lib-Workstation1200 VMware VIX Workstation-12.0.0 Library             1.15.7.5234757      
+vmware-workstation             VMware Workstation                                12.5.5.5234757      
+
+Podemos eliminar componentes que no nos interesan con:
+sudo bash VMware-Workstation-Full-12.5.5-5234757.x86_64.bundle --uninstall-component=NAME
+
+
+Para ver la lista de productos instalados, hacemos:
+
+sudo bash VMware-Workstation-Full-12.5.5-5234757.x86_64.bundle -l
+Extracting VMware Installer...done.
+Product Name         Product Version     
+==================== ====================
+vmware-workstation   12.5.5.5234757      
+
+Para eliminar completamente el producto, hacer:
+sudo bash VMware-Workstation-Full-12.5.5-5234757.x86_64.bundle --uninstall-product=vmware-workstation
 
 FIXME
 
