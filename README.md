@@ -13,6 +13,32 @@ a las aplicaciones corporativas son: monitoreo de servicios y equipos; gestión 
 proxy y cache de acceso a Web; instalación desatendida de equipos físicos; clonación de una instalación
 en múltiples equipos; respaldos de datos; etc.
 
+Los servicios corporativos pueden clasificarse también de acuerdo al nivel dentro de la pila de servicios,
+de acuerdo a sus dependencias: un servicio A que depende para funcionar de otro B, indica que A está
+debajo de B en la pila.  Sin ser exhaustivos, y si listamos servicios con los elementos de la pila
+en orden de dependencias serán:
+
+* aplicaciones corporativas
+  * Web de negocios
+  * mensajería instantánea
+  * gestión de proyectos
+  * intranet, etc.
+* aplicaciones para gestión de infraestructura 
+  * gestión de incidencias, documentación de infraestructura
+  * gestión de cuentas de correo, etc.
+* integración continua
+* repositorio de artefactos binarios
+* monitoreo de servicios y equipos, alertas y paneles de visualización
+* gestión de configuraciones centralizado (Ansible)
+* mensajería instantánea
+* repositorio de código fuente
+* correo electrónico
+* gestión de identificaciones (LDAP)
+* acceso a Internet (proxy y caché Web)
+* servicio de hora (NTP)
+* servicio de resolución de nombres y direcciones IP (DNS)
+* hipervisores, nodos físicos
+
 Hay dos situaciones de inicio de infraestructura: una se da cuando no existe la infraestructura
 previamente y otra cuando se desea recrear la infraestructura.  Ejemplo del primer caso es cuando
 se comienza un emprendimiento, o cuando se reemplaza la vieja infra por una basada en una tecnología
