@@ -246,6 +246,16 @@ sudo apt-get install -y libxslt-dev libxml2-dev libvirt-dev zlib1g-dev ruby-dev
 vagrant plugin install vagrant-libvirt
 ```
 
+Lo verificamos con:
+
+```bash
+# la imagen debian/stretch64 requiere un servidor NFS en el host:
+sudo apt-get install nfs-kernel-server
+
+cd /tmp
+vagrant init --minimal debian/stretch64
+vagrant up --provider=libvirt
+```
 
 ## Instalación de  VMware Workstation
 
