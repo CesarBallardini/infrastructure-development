@@ -30,6 +30,7 @@ Ahora instalamos Ansible, mediante el gestor de paquetes Python `pip`:
 ```bash
   sudo apt-get install -y python-pip python-cffi python-dev
   sudo pip install --upgrade pip
+  sudo pip install --upgrade setuptools
   sudo pip install --upgrade ansible 
 ```
 
@@ -45,6 +46,23 @@ muchas mejoras que no podemos permitirnos ignorar.
 Pip usará el acceso a internet: recuerde configurar el proxy si eso es necesario en su caso.
 
 
+## Instalación del hipervisor
+
+Tenemos cuatro alternativas de hipervisor:
+
+* Virtualbox
+* KVM
+* VMware
+* LXC
+
+El caso de LXC está admitido directamente en el núcleo Linux.  Los otros deben obtenerse por separado.
+
+Cuando utilizamos un hipervisor, éste usa los recursos del sistema operativo mediante unos módulos especiales propios.
+No es factible que tengamos habilitados a la vez dos o más hipervisores sin que entren en conflicto.
+
+Debe tenerse esto en cuenta: antes de activar o instalar un hipervisor, asegúrese que los otros hipervisores no están activos.
+
+
 ## Instalación de Virtualbox
 
 Las instrucciones que se siguen son las de https://www.virtualbox.org/wiki/Linux_Downloads
@@ -56,7 +74,12 @@ La distro se puede obtener mediante:
   lsb_release -cs
 ```
 
-Para buscar las claves del repo de Virtualbox se usará `wget`: configure el proxy para que `wget` pueda salir a internet.
+Para buscar las claves del repo de Virtualbox se usará `wget`: instale y configure el proxy para que `wget` pueda salir a internet.
+
+```bash
+sudo apt-get install -y wget
+```
+
 
 ### Ubuntu 14.04
 
@@ -67,35 +90,46 @@ Si instalamos usando el gestor de paquetes APT, las versiones disponibles son:
 Cuando la página de descargas muestra que está disponible la versión 5.1. Seguimos las instrucciones allí
 descritas para instalar la última versión desde el paquete Oracle oficial:
 
+```bash
 sudo apt-get install -y dkms
 wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
 echo "deb http://download.virtualbox.org/virtualbox/debian "$(lsb_release -cs)" contrib" | sudo tee /etc/apt/sources.list.d/virtualbox.list
 sudo apt-get update
 sudo apt-get install -y virtualbox-5.1
+```
 
 ### Ubuntu 16.04
 
+```bash
 sudo apt-get install -y dkms
 wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add -
 echo "deb http://download.virtualbox.org/virtualbox/debian "$(lsb_release -cs)" contrib" | sudo tee /etc/apt/sources.list.d/virtualbox.list
 sudo apt-get update
 sudo apt-get install -y virtualbox-5.1
-
+```
 
 ### Debian 8
 
+```bash
 sudo apt-get install -y dkms
 wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add -
 echo "deb http://download.virtualbox.org/virtualbox/debian "$(lsb_release -cs)" contrib" | sudo tee /etc/apt/sources.list.d/virtualbox.list
 sudo apt-get update
 sudo apt-get install -y virtualbox-5.1
+```
+
 
 ### Oracle VM VirtualBox Extension Pack
 
 En https://www.virtualbox.org/wiki/Downloads encontramos el Extension Pack para todas las plataformas admitidas.  Permite USB 2.0 y USB 3.0 devices, VirtualBox RDP, disk encryption, NVMe and PXE boot for Intel cards. See this chapter from the User Manual for an introduction to this Extension Pack.
 
 Se descarga desde:
+
+```bash
 wget http://download.virtualbox.org/virtualbox/5.1.18/Oracle_VM_VirtualBox_Extension_Pack-5.1.18-114002.vbox-extpack
+```
+
+
 
 ## Instalación de  Vagrant + plugin útiles
 
@@ -116,6 +150,18 @@ Descargamos:
 La página de plugins https://www.vagrantup.com/docs/plugins/ nos permite elegir los que instalaremos:
 
 * https://www.vagrantup.com/vmware/index.html el plugin de vmware es de pago, no es software libre.
+
+Una lista de los plugins disponibles, sean oficiales o provistos por la comunidad, está en:
+
+* https://github.com/hashicorp/vagrant/wiki/Available-Vagrant-Plugins
+
+Los interesantes son:
+
+* https://github.com/tmatilai/vagrant-proxyconf -- Configures the VM to use proxies
+* https://github.com/dotless-de/vagrant-vbguest -- automatically update VirtualBox guest additions if necessary
+* https://github.com/smdahlen/vagrant-hostmanager -- manages hosts files within a multi-machine environment
+* https://github.com/fgrehm/vagrant-cachier -- caches packages for different managers like apt, yum
+
 
 
 ## Instalación de  Packer
@@ -148,10 +194,23 @@ Si la salida siguiente es `0`, significa que la virtualización no está activad
 egrep -c '(vmx|svm)' /proc/cpuinfo
 ```
 
+La información relacionada con la arquitectura de la CPU y la instalación del sistema operativo se puede obtener también mediante el 
+programa `kvm-ok` que se instala mediante:
+
+```bash
+sudo apt-get install -y cpu-checker
+```
+
+y vemos el resultado de nuestro equipo con:
+
+```bash
+sudo kvm-ok
+```
+
 Instalamos los paquetes requeridos:
 
 ```bash
-sudo apt-get install -y qemu-kvm libvirt-bin bridge-utils
+sudo apt-get install -y qemu-kvm libvirt-bin bridge-utils virtinst
 ``` 
 
 Soporte para iPXE en kvm:
@@ -185,60 +244,217 @@ Si se desea una interfaz gráfica para la creación y gestión de las máquinas 
 sudo apt-get install -y virt-manager virt-viewer qemu-system
 ```
 
-## Instalación de  LXD
-
-La instalación desde Ubuntu 14.04 en adelante se hace mediante `snap`, así que lo instalamos primero:
+En el caso de Ubuntu, se puede agregar:
 
 ```bash
-sudo apt install -y snapd  
-```
-
-Y luego instalamos LXD
-
-```bash
-sudo snap install lxd  
+sudo apt-get install ubuntu-vm-builder
 ```
 
 
-Configuración inicial:
+Por problemas de bibliotecas en mi Ubuntu 14.04, tuve que cambiarlas mediante:
+
+```bash
+sudo rm /usr/lib/libvirt.so.0
+sudo ln -s libvirt.so.0.1002.2  /usr/lib/libvirt.so.0
+
+sudo rm /usr/lib/libvirt-lxc.so.0
+sudo ln -s /usr/lib/libvirt-lxc.so.0.1002.2 /usr/lib/libvirt-lxc.so.0
+
+sudo rm /usr/lib/libvirt-qemu.so.0
+sudo ln -s /usr/lib/libvirt-qemu.so.0.1002.2 /usr/lib/libvirt-qemu.so.0
+
+sudo modprobe kvm_intel
+sudo service  libvirt-bin restart
+```
+
+Ahora puedo ver la lista de VMs (nula inicialmente) en el hipervisor KVM:
+
+```bash
+virsh -c qemu:///system list
+
+```
+
+
+
+Como en mi sistema Ubuntu tengo Python 2 y 3 simultáneamente instalados, para correr `virt-manager`
+debo hacelo así:
+
+```bash
+python2 /usr/share/virt-manager/virt-manager.py
+
+```
+
+Los directorios distinguidos de libvirt son:
+* `/var/lib/libvirt/boot/` imágenes ISO para instalaciones
+* `/var/lib/libvirt/images/` imágenes de las VMs
+* `/etc/libvirt/` configuración
+
+
+Si deseamos apagar los servicios de kvm, debemos hacer:
+
+```bash
+sudo service qemu-kvm stop
+sudo rmmod kvm_intel ; sudo rmmod kvm
+
+```
+
+
+## Instalación de  LXC
+
+
+```bash
+sudo apt-get install -y lxc2 lxctl
+sudo apt-get install -y lxc2 lxctl -t trusty-backports # en Ubuntu 14.04
+```
+
+Verificamos la configuración:
+
+```bash
+sudo lxc-checkconfig
+```
+
+Hay plantillas para crear distros en `/usr/share/lxc/templates/`
+
+
+Configurar el LXD subyacente:
 
 ```bash
 sudo adduser `id -un` lxd
-sudo lxd init
+newgrp lxd
+sudo service lxd restart
+sudo -i lxd init --auto
+
+# Configuramos el proxy si hace falta para nuestra red:
+lxc config set core.proxy_http ${http_proxy}
+lxc config set core.proxy_https ${https_proxy}
+lxc config set core.proxy_ignore_hosts 10.0.0.0/8,127.0.0.1,*.santafe.gov,ar,*.santafe.gob.ar
 ```
+
+Fuentes de imágenes: 
+
+```bash
+lxc remote list
+lxc image list
+```
+
+Altero el perfil default para que incorpore la info de proxies:
+
+```bash
+lxc profile set default environment.http_proxy  ${http_proxy}
+lxc profile set default environment.https_proxy ${https_proxy}
+lxc profile set default environment.HTTP_PROXY  ${http_proxy}
+lxc profile set default environment.HTTPS_PROXY ${https_proxy}
+lxc profile set default environment.no_proxy 127.0.0.1,10.0.0.0/8
+lxc profile set default environment.NO_PROXY 127.0.0.1,10.0.0.0/8
+```
+
+¿Cómo esta el servicio LXD?
+
+```bash
+sudo service lxd status
+lxc info
+```
+
 
 Instalo algunas imágenes para crear contenedores:
 
 ```bash
+
+lxc image list images: ubuntu/bionic/amd64
 lxc image copy ubuntu:18.04    local: --copy-aliases --auto-update
 lxc image copy ubuntu:16.04    local: --copy-aliases --auto-update
 lxc image copy ubuntu:14.04    local: --copy-aliases --auto-update
-lxc image copy images:debian/9 local: --copy-aliases --auto-update
 
+
+lxc image list images: debian/buster/amd64  # Debian10 Testing
+lxc image list images: debian/stretch/amd64 # Debian9  Stable
+lxc image copy images:debian/9 local: --copy-aliases --auto-update
+lxc image copy images:debian/8 local: --copy-aliases --auto-update
+lxc image copy images:debian/7 local: --copy-aliases --auto-update
+
+```
+
+
+Verifico que puedo crear contenedores:
+
+```bash
+time lxc launch debian/7  prueba # aprox. 11s
+lxc list
+lxc info  prueba
+
+time lxc stop   prueba --force   # aprox. 1s
+lxc list
+
+time lxc start  prueba           # aprox. 1s
+lxc list
+
+time lxc delete prueba --force   # aprox. 1s
+lxc list
+```
+
+Creamos un contenedor a partir de un template:
+
+```bash
+sudo lxc-create --template download -n ubuntu-pruebas -- --dist ubuntu --release bionic --arch amd64
+sudo lxc-attach -n ubuntu-pruebas -- bash -c "ip addr show eth0 | awk  '/inet /{print $2}'
+# FIXME: elegir el rango de direcciones IP que se entregan a los contenedores y configurarlos permitidos en el proxy server
+sudo lxc-attach -n ubuntu-pruebas -- bash -c "apt update && apt install -y openssh-server"
+sudo lxc-attach -n ubuntu-pruebas -- bash -c "echo 'PermitRootLogin Yes' >> /etc/ssh/sshd_config && service sshd restart "
+sudo lxc-attach -n ubuntu-pruebas -- bash -c "echo root:root | chpasswd "
+# Ahora se puede hacer SSH al contenedor
+
+sudo lxc-create -n ubuntu-pruebas --template ubuntu
+sudo lxc-ls --fancy
+
+sudo lxc-start -n ubuntu-pruebas -d
+sudo lxc-ls --fancy
+
+sudo lxc-console -n ubuntu-pruebas
+# Ctrl-A Q para salir de esa consola
+
+sudo lxc-info -n ubuntu-pruebasa
+
+sudo lxc-stop -n ubuntu-pruebas
+sudo lxc-destroy -n ubuntu-pruebas
+```
+
+
+Referencias
+* https://hostpresto.com/community/tutorials/install-and-setup-lxc-on-ubuntu-14-04/
+* https://help.ubuntu.com/lts/serverguide/lxc.html
+
+
+## Instalación de plugin Vagrant para LXC
+
+
+```bash
+vagrant plugin install vagrant-lxc
+```
+
+Prueba:
+
+```bash
+vagrant init fgrehm/precise64-lxc
+vagrant up --provider=lxc
+
+sudo lxc-ls --fancy
+
+vagrant ssh
+vagrant halt
+vagrant destroy -f
 
 ```
 
 Referencias
-  * https://stgraber.org/2016/03/30/lxd-2-0-image-management-512/
-  * https://lxd.readthedocs.io/en/latest/image-handling/
 
-## Instalación de plugin libvirt y LXD para Vagrant
+* https://github.com/fgrehm/vagrant-lxc
+* https://github.com/hsoft/vagrant-lxc-base-boxes Cómo construir tus propios boxes
 
-```bash
-vagrant plugin install vagrant-lxd
-```
 
-Verificamos que funciona con:
 
-```bash
-cd /tmp
-vagrant init --minimal debian/stretch64
-vagrant up --provider=lxd
-```
 
-FIXME: esto da un error de conexion al LXD
 
-Ahora instalamos el plugin para gestionar libvirt y KVM:
+## Instalación de plugin para estionar libvirt y KVM:
 
 ```bash
 sudo apt-get build-dep ruby-libvirt
@@ -343,8 +559,14 @@ Para eliminar completamente el producto, hacer:
 sudo bash VMware-Workstation-Full-12.5.5-5234757.x86_64.bundle --uninstall-product=vmware-workstation
 ```
 
+Para detener la ejecución de la virtualización VMware, hacer:
 
-FIXME
+```bash
+# detenemos los servicios VMware:
+sudo service vmware stop ; sudo service vmware-USBArbitrator stop ;   sudo service  vmware-workstation-server stop
+
+```
+
 
 ## Instalación de  Bibliotecas pysphere y pyvmomi para módulos vSphere de Ansible
 
