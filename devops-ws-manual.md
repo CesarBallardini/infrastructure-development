@@ -87,7 +87,7 @@ Si instalamos usando el gestor de paquetes APT, las versiones disponibles son:
 * 4.3.36-dfsg-1+deb8u1ubuntu1.14.04.1 0 trusty-updates/multiverse
 * 4.3.10-dfsg-1 0 trusty/multiverse
 
-Cuando la página de descargas muestra que está disponible la versión 5.1. Seguimos las instrucciones allí
+Cuando la página de descargas muestra que está disponible la versión 5.2. Seguimos las instrucciones allí
 descritas para instalar la última versión desde el paquete Oracle oficial:
 
 ```bash
@@ -95,7 +95,7 @@ sudo apt-get install -y dkms
 wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
 echo "deb http://download.virtualbox.org/virtualbox/debian "$(lsb_release -cs)" contrib" | sudo tee /etc/apt/sources.list.d/virtualbox.list
 sudo apt-get update
-sudo apt-get install -y virtualbox-5.1
+sudo apt-get install -y virtualbox-5.2
 ```
 
 ### Ubuntu 16.04
@@ -105,7 +105,7 @@ sudo apt-get install -y dkms
 wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add -
 echo "deb http://download.virtualbox.org/virtualbox/debian "$(lsb_release -cs)" contrib" | sudo tee /etc/apt/sources.list.d/virtualbox.list
 sudo apt-get update
-sudo apt-get install -y virtualbox-5.1
+sudo apt-get install -y virtualbox-5.2
 ```
 
 ### Debian 8
@@ -115,7 +115,7 @@ sudo apt-get install -y dkms
 wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add -
 echo "deb http://download.virtualbox.org/virtualbox/debian "$(lsb_release -cs)" contrib" | sudo tee /etc/apt/sources.list.d/virtualbox.list
 sudo apt-get update
-sudo apt-get install -y virtualbox-5.1
+sudo apt-get install -y virtualbox-5.2
 ```
 
 
@@ -126,7 +126,7 @@ En https://www.virtualbox.org/wiki/Downloads encontramos el Extension Pack para 
 Se descarga desde:
 
 ```bash
-wget http://download.virtualbox.org/virtualbox/5.1.18/Oracle_VM_VirtualBox_Extension_Pack-5.1.18-114002.vbox-extpack
+wget http://download.virtualbox.org/virtualbox/5.2.18/Oracle_VM_VirtualBox_Extension_Pack-5.2.18-124319.vbox-extpack
 ```
 
 
@@ -136,13 +136,13 @@ wget http://download.virtualbox.org/virtualbox/5.1.18/Oracle_VM_VirtualBox_Exten
 Las versiones disponibles en Ubuntu 14.04 son muy antiguas:
 * 1.4.3-1 trusty/universe
 
-En la página de descargas de Vagrant la última versión actual es 1.9.3 https://www.vagrantup.com/downloads.html
+En la página de descargas de Vagrant la última versión actual es 2.1.2 https://www.vagrantup.com/downloads.html
 
 Descargamos:
 
 ```bash
-  wget https://releases.hashicorp.com/vagrant/1.9.3/vagrant_1.9.3_x86_64.deb
-  sudo dpkg -i vagrant_1.9.3_x86_64.deb 
+  wget https://releases.hashicorp.com/vagrant/2.1.2/vagrant_2.1.2_x86_64.deb
+  sudo dpkg -i vagrant_2.1.2_x86_64.deb 
 
 ```
 
@@ -172,8 +172,8 @@ descomprime en algún directorio que quede en el PATH de ejecución.
 La página de descargas está en: https://www.packer.io/downloads.html
 
 ```bash
-  wget https://releases.hashicorp.com/packer/1.0.0/packer_1.0.0_linux_amd64.zip
-  sudo unzip packer_1.0.0_linux_amd64.zip -d /usr/local/bin/
+  wget https://releases.hashicorp.com/packer/1.2.5/packer_1.2.5_linux_amd64.zip
+  sudo unzip packer_1.2.5_linux_amd64.zip -d /usr/local/bin/
 
 ```
 
@@ -458,7 +458,7 @@ sudo lxc-ls --fancy
 sudo lxc-console -n ubuntu-pruebas
 # Ctrl-A Q para salir de esa consola
 
-sudo lxc-info -n ubuntu-pruebasa
+sudo lxc-info -n ubuntu-pruebas
 
 sudo lxc-stop -n ubuntu-pruebas
 sudo lxc-destroy -n ubuntu-pruebas
