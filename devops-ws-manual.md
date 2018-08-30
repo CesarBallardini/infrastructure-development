@@ -136,13 +136,13 @@ wget http://download.virtualbox.org/virtualbox/5.2.18/Oracle_VM_VirtualBox_Exten
 Las versiones disponibles en Ubuntu 14.04 son muy antiguas:
 * 1.4.3-1 trusty/universe
 
-En la página de descargas de Vagrant la última versión actual es 2.1.2 https://www.vagrantup.com/downloads.html
+En la página de descargas de Vagrant la última versión actual es 2.1.3 https://www.vagrantup.com/downloads.html
 
 Descargamos:
 
 ```bash
-  wget https://releases.hashicorp.com/vagrant/2.1.2/vagrant_2.1.2_x86_64.deb
-  sudo dpkg -i vagrant_2.1.2_x86_64.deb 
+  wget https://releases.hashicorp.com/vagrant/2.1.3/vagrant_2.1.3_x86_64.deb
+  sudo dpkg -i vagrant_2.1.3_x86_64.deb 
 
 ```
 
